@@ -1,0 +1,3 @@
+dd if=$1 bs=4096 count=8 status=none | strings -n 6 
+
+#Reads the first 4096 bytes of an input Starlight Wii image and outputs the list of games.
