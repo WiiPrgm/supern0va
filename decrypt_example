@@ -1,0 +1,5 @@
+dd if=SESWIIFC001284.bin bs=4096 skip=$((0x34A598000/4096)) count=$((0x118260000/4096)) conv=swab status=none \
+| openssl enc -d -des-ede3-ecb -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB -nopad \ 
+| dd of=finalswap.img bs=4096 conv=swab status=progress
+
+Single command to extract and decrypt directly from a Wii starlight image.
