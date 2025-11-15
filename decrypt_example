@@ -1,8 +1,7 @@
 dd if="$1" bs=4096 skip=3450264 count=1147488 conv=swab status=none \
-| openssl enc -d -des-ede3-ecb -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB -nopad \ 
+| openssl enc -d -des-ede3-ecb -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB -nopad \
 | dd of="$1.$2.out.img" bs=4096 conv=swab status=progress \
-name=$(dd if="$1.$2.out.img" bs=1 count=64 skip=8 status=none | strings)
-mv "$1.$2.out.img" "$name"
+mv "$1.$2.out.img" "$(dd if="$1.$2.out.img" bs=1 count=64 skip=8 status=none | strings).iso"
 
 Single command to extract and decrypt directly from a Wii starlight image.
 
