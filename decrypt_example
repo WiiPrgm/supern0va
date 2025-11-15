@@ -3,3 +3,6 @@ dd if=SESWIIFC001284.bin bs=4096 skip=$((0x34A598000/4096)) count=$((0x118260000
 | dd of=finalswap.img bs=4096 conv=swab status=progress
 
 Single command to extract and decrypt directly from a Wii starlight image.
+
+skip=$((0x34A598000/4096) should equal 'skip=3450264' need to test.
+count=$((0x118260000/4096)) should equal 'count=$1147488' need to test.
