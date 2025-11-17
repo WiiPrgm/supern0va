@@ -1,0 +1,50 @@
+
+numlist() {
+    local hddimage="$1"
+    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | cat -n
+}
+
+bankextract() {
+    local hddimage="$1"
+    local banknum="$2"
+
+    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${index}p"
+
+    SKIP=$((1150264 + (1150000 * (index - 1))))
+
+    dd if="$hddimage" bs=4096 skip=$SKIP count=1147488 conv=swab status=none \
+    | openssl enc -d -des-ede3-ecb \
+        -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
+        -nopad \
+    | dd of="$hddimage.$banknum.out.img" bs=4096 conv=swab status=progress
+
+    mv "$hddimage.$banknum.out.img" "$(dd if="$hddimage.$banknum.out.img" bs=1 count=64 skip=8 status=none | strings).iso"
+}
+
+unlock() {
+    #local hddimage="$1"
+    #TBD
+    #UnlockHDD
+}
+
+deeplist() {
+    #local hddimage="$1"
+    #TBD
+    #Read bank names from hdd. Will require pulling out a 4096kb chunck and decrypting it.
+}
+
+
+case "$1" in
+    numlist)
+        numlist "$2"
+        ;;
+    bankextract)
+        bankextract "$2" "$3"
+        ;;
+    unlock)
+        unlock "$2"
+        ;;
+    deeplist)
+        deeplist "$2"
+        ;;
+esac
