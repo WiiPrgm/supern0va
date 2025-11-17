@@ -8,9 +8,9 @@ bankextract() {
     local hddimage="$1"
     local banknum="$2"
 
-    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${index}p"
+    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p"
 
-    SKIP=$((1150264 + (1150000 * (index - 1))))
+    SKIP=$((1150264 + (1150000 * (banknum - 1))))
 
     dd if="$hddimage" bs=4096 skip=$SKIP count=1147488 conv=swab status=none \
     | openssl enc -d -des-ede3-ecb \
