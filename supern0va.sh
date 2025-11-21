@@ -1,8 +1,12 @@
 numlist() {
     local hddimage="$1"
-    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | nl -w1 -s'. '
+    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed 's/^SES://' | nl -w1 -s'. '
 }
 
+numlistall() {
+    local hddimage="$1"
+    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | nl -w1 -s'. '
+}
 
 bankextract() {
     local hddimage="$1"
@@ -28,6 +32,9 @@ case "$1" in
     extract|-x)
         bankextract "$2" "$3"
         ;;
+	listall|-la)
+		numlistall "$2"
+		;;
 
 	help|--h|-h)
 	echo This tool can extract individual images from a Starlight Wii HDD dump.
