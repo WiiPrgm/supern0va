@@ -1,6 +1,6 @@
 numlist() {
     local hddimage="$1"
-    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | cat -n
+    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | nl -w1 -s'. '
 }
 
 
