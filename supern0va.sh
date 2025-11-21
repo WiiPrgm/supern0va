@@ -23,7 +23,13 @@ bankextract() {
         -nopad \
     | dd of="$hddimage.$banknum.out.img" bs=4096 conv=swab status=progress
 
-    mv "$hddimage.$banknum.out.img" "$(dd if="$hddimage.$banknum.out.img" bs=1 count=64 skip=8 status=none | strings).iso"
+    if [ "$banknum" -eq 1 ]; then
+        mv "$hddimage.$banknum.out.img" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").iso"
+    else
+	mv "$hddimage.$banknum.out.img" "$(dd if="$hddimage.$banknum.out.img" bs=1 count=64 skip=8 status=none | strings).iso"
+    fi
+
+
 }
 
 bankextractall() {
@@ -46,11 +52,11 @@ case "$1" in
         bankextract "$2" "$3"
         ;;
     listall|-la)
-		numlistall "$2"
-		;;
+	numlistall "$2"
+	;;
     extractall|-xa)
-		bankextractall "$2"
-		;;
+	bankextractall "$2"
+	;;
 
 	help|--h|-h)
 	echo This tool can extract individual images from a Starlight Wii HDD dump.
