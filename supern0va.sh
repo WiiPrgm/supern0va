@@ -46,11 +46,11 @@ case "$1" in
         bankextract "$2" "$3"
         ;;
     listall|-la)
-	numlistall "$2"
-	;;
+		numlistall "$2"
+		;;
     extractall|-xa)
-	bankextractall "$2"
-	;;
+		bankextractall "$2"
+		;;
 
 	help|--h|-h)
 	echo This tool can extract individual images from a Starlight Wii HDD dump.
