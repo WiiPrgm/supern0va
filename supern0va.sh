@@ -3,6 +3,7 @@ numlist() {
     dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed 's/^SES://' | nl -w1 -s'. '
 }
 
+
 numlistall() {
     local hddimage="$1"
     dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | nl -w1 -s'. '
@@ -25,6 +26,18 @@ bankextract() {
     mv "$hddimage.$banknum.out.img" "$(dd if="$hddimage.$banknum.out.img" bs=1 count=64 skip=8 status=none | strings).iso"
 }
 
+bankextractall() {
+    local hddimage="$1"
+    local totalbanks
+
+    totalbanks=$(numlist "$hddimage" | wc -l)
+
+    for bank in $(seq 1 "$totalbanks"); do
+        echo "$bank" / "$totalbanks"
+        bankextract "$hddimage" "$bank"
+	done
+}
+
 case "$1" in
     list|-l)
         numlist "$2"
@@ -32,15 +45,19 @@ case "$1" in
     extract|-x)
         bankextract "$2" "$3"
         ;;
-	listall|-la)
-		numlistall "$2"
-		;;
+    listall|-la)
+	numlistall "$2"
+	;;
+    extractall|-xa)
+	bankextractall "$2"
+	;;
 
 	help|--h|-h)
 	echo This tool can extract individual images from a Starlight Wii HDD dump.
-	echo There are 2 available options in this releaase.
+	echo There are 3 available options in this releaase.
 	echo $0 -l [HDD image] will list all games from the HDD header.
 	echo $0 -x [HDD image] [Bank Number] will extract that game from the HDD image.
+	echo $0 -xa [HDD image] will extract all games from the HDD image.
 	exit 1
 	;;
 
