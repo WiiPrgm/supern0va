@@ -38,6 +38,33 @@ bankextract() {
 
 }
 
+tplextract(){
+	local hddimage="$1"
+	local banknum="$2"
+
+	#Outputs the name of the bank being extracted to stdout
+    dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p"
+	
+	#math to calculate the starting offset of the bank being extracted
+	#FIX THIS SO IT SKIPS PAST THE GAME DATA
+    SKIP=$((1152784 + (1150000 * (banknum - 1))))
+
+
+	 dd if="$hddimage" bs=4096 skip=$SKIP count=8 conv=swab status=none \ #changed from 1147488 to 1147480 to exclude tpl1 area.
+    | openssl enc -d -des-ede3-ecb \
+        -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
+        -nopad \
+    | dd of="$hddimage.$banknum.out.tpl" bs=4096 conv=swab status=progress
+
+
+
+	mv "$hddimage.$banknum.out.tpl" "$(dd if="$hddimage.$banknum.out.tpl" bs=1 count=64 skip=8 status=none | strings).1.tpl"
+#code to check for presence of tpls
+#code to extract and decrypt tpls
+#code to rename tpls
+
+}
+
 #loop to extract all images sequentially
 bankextractall() {
     local hddimage="$1"
@@ -58,11 +85,14 @@ case "$1" in
     extract|-x)
         bankextract "$2" "$3"
         ;;
+	tplextract|-tpl)
+        tplextract "$2" "$3"
+        ;;
     listall|-la)
-	numlistall "$2"
+		numlistall "$2"
 	;;
     extractall|-xa)
-	bankextractall "$2"
+		bankextractall "$2"
 	;;
 
 	help|--h|-h)
