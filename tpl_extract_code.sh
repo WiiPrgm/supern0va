@@ -21,7 +21,8 @@ bankextract() {
     #math to calculate the starting offset of the bank being extracted
     SKIP=$((1150264 + (1150000 * (banknum - 1))))
 
-    dd if="$hddimage" bs=4096 skip=$SKIP count=1147480 conv=swab status=none \ #changed from 1147488 to 1147480 to exclude tpl1 area.
+#count= math here is untested
+    dd if="$hddimage" bs=4096 skip=$SKIP count=1147480 conv=swab status=none \ 
     | openssl enc -d -des-ede3-ecb \
         -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
         -nopad \
@@ -50,7 +51,8 @@ tplextract(){
     SKIP=$((1152784 + (1150000 * (banknum - 1))))
 
 
-	 dd if="$hddimage" bs=4096 skip=$SKIP count=8 conv=swab status=none \ #changed from 1147488 to 1147480 to exclude tpl1 area.
+ #count math here is outputing empty data. fix.
+	 dd if="$hddimage" bs=4096 skip=$SKIP count=8 conv=swab status=none \
     | openssl enc -d -des-ede3-ecb \
         -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
         -nopad \
