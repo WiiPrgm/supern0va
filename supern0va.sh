@@ -48,7 +48,6 @@ tplextract(){
 
 	#math to calculate the offset of the tpl being extracted
     SKIP=$((2297744 + (1150000 * (banknum - 1))))
-	echo $SKIP
 
 	 dd if="$hddimage" bs=4096 skip=$SKIP count=128 conv=swab status=none \
     | openssl enc -d -des-ede3-ecb \
@@ -56,11 +55,14 @@ tplextract(){
         -nopad \
     | dd of="$hddimage.$banknum.1.tpl" bs=4096 conv=swab status=none
 
+
+#checks to make sure generated file is a tpl. It renames it based on the HDD header it it's a tpl. Otherwise, it deletes the file.
 	if [ "$(xxd -p -l 4 "$hddimage.$banknum.1.tpl")" = "0020af30" ]; then
     		mv "$hddimage.$banknum.1.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").1.tpl"
 		echo "TPL1 Extracted."
 	else
     		echo "No TPL Detected."
+		rm "$hddimage.$banknum.1.tpl"
 	fi
 
 
@@ -73,16 +75,14 @@ tplextract(){
         -nopad \
     | dd of="$hddimage.$banknum.2.tpl" bs=4096 conv=swab status=none
 
-	mv "$hddimage.$banknum.2.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").2.tpl"
 
-
-
-#if not a tpl delete, otherwise rename
-
-
-
-#Still need to add extraction for tpl 2.
-#need to add tpl detection
+	if [ "$(xxd -p -l 4 "$hddimage.$banknum.2.tpl")" = "0020af30" ]; then
+    		mv "$hddimage.$banknum.2.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").2.tpl"
+		echo "TPL2 Extracted."
+	else
+    		echo "No TPL Detected."
+		rm "$hddimage.$banknum.2.tpl"
+	fi
 
 }
 
