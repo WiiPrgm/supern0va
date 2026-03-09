@@ -58,7 +58,16 @@ tplextract(){
 
 	mv "$hddimage.$banknum.1.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").1.tpl"
 
-#Still need to add extraction for tpl 2.
+#extract tpl2
+
+ 	dd if="$hddimage" bs=4096 skip=$((SKIP+128)) count=416 conv=swab status=none \
+    | openssl enc -d -des-ede3-ecb \
+        -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
+        -nopad \
+    | dd of="$hddimage.$banknum.2.tpl" bs=4096 conv=swab status=progress
+
+	mv "$hddimage.$banknum.2.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").2.tpl"
+	
 #need to add tpl detection
 
 }
