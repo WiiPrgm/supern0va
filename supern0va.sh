@@ -120,6 +120,7 @@ case "$1" in
 	echo This tool can extract individual images from a Starlight Wii HDD dump.
 	echo There are 3 available options in this releaase.
 	echo $0 -l [HDD image] will list all games from the HDD header.
+	echo $0 -tpl [HDD image] [Bank Number] will extract the box art TPL if present.
 	echo $0 -x [HDD image] [Bank Number] will extract that game from the HDD image.
 	echo $0 -xa [HDD image] will extract all games from the HDD image.
 	exit 1
