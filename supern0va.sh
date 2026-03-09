@@ -54,9 +54,16 @@ tplextract(){
     | openssl enc -d -des-ede3-ecb \
         -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
         -nopad \
-    | dd of="$hddimage.$banknum.1.tpl" bs=4096 conv=swab status=progress
+    | dd of="$hddimage.$banknum.1.tpl" bs=4096 conv=swab status=none
 
-	mv "$hddimage.$banknum.1.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").1.tpl"
+	if [ "$(xxd -p -l 4 "$hddimage.$banknum.1.tpl")" = "0020af30" ]; then
+    		mv "$hddimage.$banknum.1.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").1.tpl"
+		echo "TPL1 Extracted."
+	else
+    		echo "No TPL Detected."
+	fi
+
+
 
 #extract tpl2
 
@@ -64,10 +71,17 @@ tplextract(){
     | openssl enc -d -des-ede3-ecb \
         -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
         -nopad \
-    | dd of="$hddimage.$banknum.2.tpl" bs=4096 conv=swab status=progress
+    | dd of="$hddimage.$banknum.2.tpl" bs=4096 conv=swab status=none
 
 	mv "$hddimage.$banknum.2.tpl" "$(dd if="$hddimage" bs=4096 count=8 status=none | strings -n 6 | sed -n "${banknum}p").2.tpl"
-	
+
+
+
+#if not a tpl delete, otherwise rename
+
+
+
+#Still need to add extraction for tpl 2.
 #need to add tpl detection
 
 }
@@ -106,7 +120,6 @@ case "$1" in
 	echo This tool can extract individual images from a Starlight Wii HDD dump.
 	echo There are 3 available options in this releaase.
 	echo $0 -l [HDD image] will list all games from the HDD header.
-	echo $0 -tpl [HDD image] [Bank Number] will extract the box art TPL if present.
 	echo $0 -x [HDD image] [Bank Number] will extract that game from the HDD image.
 	echo $0 -xa [HDD image] will extract all games from the HDD image.
 	exit 1
