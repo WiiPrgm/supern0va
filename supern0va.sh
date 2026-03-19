@@ -22,7 +22,7 @@ bankextract() {
     SKIP=$((1150264 + (1150000 * (banknum - 1))))
 
 #this may be wrong. Might need to remove 128 from the count?
-    dd if="$hddimage" bs=4096 skip=$SKIP count=1147488 conv=swab status=none \
+    dd if="$hddimage" bs=4096 skip=$SKIP count=1147480 conv=swab status=none \
     | openssl enc -d -des-ede3-ecb \
         -K 92072A6B1C6BE373A4023E7ABA86153E1007FEE35B689BCB \
         -nopad \
