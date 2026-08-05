@@ -48,7 +48,7 @@ encryptedbankextract() {
     dd if="$hddimage" of="$gamename.$hddimage.$banknum.out.img" bs=4096 skip=$SKIP count=1147480 status=progress
 	}
 	
-encryptedbankwritet() {
+encryptedbankwrite() {
     local hddimage="$1"
     local banknum="$2"
 	local imageloc="$3"
@@ -58,7 +58,7 @@ encryptedbankwritet() {
 	echo "$gamename"
 
     #math to calculate the starting offset of the bank being extracted
-    seek=$((1150264 + (1150000 * (banknum - 1))))
+    SEEK=$((1150264 + (1150000 * (banknum - 1))))
 
 	#this may be wrong. Might need to remove 128 from the count?
     dd if="$imageloc" of="$hddimage" bs=4096 seek=$SEEK count=1147480 status=progress conv=notrunc
@@ -142,10 +142,11 @@ case "$1" in
     extractall|-xa)
 		bankextractall "$2"
 		;;
-	rawextract|-xe
-		encryptedbankextract
+	rawextract|-xe)
+		encryptedbankextract "$2" "$3"
 		;;
-	rawwrite|-we
+	rawwrite|-we)
+		encryptedbankwrite "$2" "$3" "$4"
 	;;
 
 	help|--h|-h)
