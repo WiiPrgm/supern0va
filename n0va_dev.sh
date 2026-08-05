@@ -1,4 +1,4 @@
-#n0va_dev v2.0b
+#n0va_dev v2.1b
 numlist() {
     #This truncates the output to remove the leading 'SES:' from the header titles.
     local hddimage="$1"
@@ -138,9 +138,14 @@ case "$1" in
         ;;
     listall|-la)
 		numlistall "$2"
-	;;
+		;;
     extractall|-xa)
 		bankextractall "$2"
+		;;
+	rawextract|-xe
+		encryptedbankextract
+		;;
+	rawwrite|-we
 	;;
 
 	help|--h|-h)
@@ -150,6 +155,8 @@ case "$1" in
 	echo $0 -tpl [HDD image] [Bank Number] will extract the box art TPL if present.
 	echo $0 -x [HDD image] [Bank Number] will extract that game from the HDD image.
 	echo $0 -xa [HDD image] will extract all games from the HDD image.
+	echo $0 -xe [HDD image] [Bank Number] will extract the encrypted game from the image.
+	echo $0 -we [HDD image] [Bank Number] [Encrypted Disc Image] will write an encrypted game to a complete disc image.
 	exit 1
 	;;
 
