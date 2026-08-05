@@ -42,6 +42,7 @@ encryptedbankextract() {
 
 	#this may be wrong. Might need to remove 128 from the count?
     dd if="$hddimage" of="$gamename.$hddimage.$banknum.out.img" bs=4096 skip=$SKIP count=1147480 status=progress
+	}
 	
 encryptedbankwritet() {
     local hddimage="$1"
@@ -58,8 +59,6 @@ encryptedbankwritet() {
 	#this may be wrong. Might need to remove 128 from the count?
     dd if="$imageloc" of="$hddimage" bs=4096 seek=$SEEK count=1147480 status=progress conv=notrunc
 	#check input size and check space available on the device
-
-
 
 }
 
